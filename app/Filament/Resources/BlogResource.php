@@ -16,6 +16,8 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
  use Filament\Tables\Columns\ImageColumn;
+ use Filament\Forms\Components\Textarea;
+
 class BlogResource extends Resource
 {
     protected static ?string $model = Blog::class;
@@ -29,6 +31,16 @@ class BlogResource extends Resource
                  TextInput::make('name'),
                 TextInput::make('title'),
                 FileUpload::make('image')
+                    ->directory('blogs')
+                     ->disk('public')
+                         ->image(),
+              
+                Textarea::make('description')
+                ->rows(5)
+                ->label('Blog Description'),
+              
+
+
                 
             ]);
     }
@@ -40,6 +52,11 @@ class BlogResource extends Resource
            TextColumn::make('name'),
            TextColumn::make('title'),
            ImageColumn::make('image')
+     ->disk('public')
+    ->label('Image'),
+        TextColumn::make('description')
+                ->label('Description')
+                ->limit(50), 
 
       
             ])

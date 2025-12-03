@@ -3,20 +3,19 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ContactResource\Pages;
-use App\Filament\Resources\ContactResource\RelationManagers;
 use App\Models\Contact;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+// IMPORTS – ये ज़रूरी हैं  
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+
 class ContactResource extends Resource
-
-
 {
     protected static ?string $model = Contact::class;
 
@@ -26,12 +25,20 @@ class ContactResource extends Resource
     {
         return $form
             ->schema([
-                
+                TextInput::make('name')
+                    ->required(),
 
-TextInput::make('name'),
-TextInput::make('email'),
-TextInput::make('mobile_number'),
-TextInput::make('message')
+                TextInput::make('email')
+                    ->email()
+                    ->required(),
+
+                TextInput::make('phone')
+                    ->required(),
+
+                Textarea::make('message')
+                    ->rows(4)
+                    ->required()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -39,38 +46,24 @@ TextInput::make('message')
     {
         return $table
             ->columns([
-                
-TextColumn::make('name'),
-TextColumn::make('email'),
-TextColumn::make('mobile_number'),
-TextColumn::make('message')
-            ])
-            ->filters([
-                //
+                TextColumn::make('name'),
+                TextColumn::make('email'),
+                TextColumn::make('phone'),
+                TextColumn::make('message')->limit(50),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListContacts::route('/'),
-            'create' => Pages\CreateContact::route('/create'),
-            'edit' => Pages\EditContact::route('/{record}/edit'),
+            
         ];
     }
 }
