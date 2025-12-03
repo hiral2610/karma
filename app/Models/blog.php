@@ -15,7 +15,7 @@ class Blog extends Model
         'title',
         'slug',
         'image',
-        'description'
+        'description',
     ];
 
     protected static function boot()
